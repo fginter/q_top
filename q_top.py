@@ -22,7 +22,7 @@ def top_up(count,args):
     with open(args.finished,"a") as fin, open(args.commands,"w") as later, open(args.log,"a") as log:
         print("#Submitting {} jobs at {}".format(len(to_run),datetime.datetime.now().isoformat()),file=fin)
         for j in to_run:
-            proc=subprocess.Popen(j,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+            proc=subprocess.Popen(j,stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=args.workdir,shell=True)
             o,e=proc.communicate()
             if proc.returncode==0:
                 print(j,file=fin)
@@ -38,6 +38,7 @@ if __name__=="__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Taito queue topper')
     parser.add_argument('-N', '--N', metavar='N', type=int, nargs=1,help='How many jobs in the queue do we want?')
+    parser.add_argument('--workdir', dest='workdir', action='store',help='Directory to run the job in')     
     parser.add_argument('--commands', dest='commands', action='store',help='One bsub command per line')
     parser.add_argument('--finished', dest='finished', action='store',help='Will write the finished commands to here')
     parser.add_argument('--log', dest='log', action='store',help='Log for failed commands')
