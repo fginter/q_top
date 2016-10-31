@@ -1,6 +1,7 @@
 import subprocess
 import datetime
 import sys
+import time
 
 def user_jobs(user):
     proc = subprocess.Popen(["squeue","-u",user],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
