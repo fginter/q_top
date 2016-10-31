@@ -1,5 +1,6 @@
 import subprocess
 import datetime
+import sys
 
 def user_jobs(user):
     proc = subprocess.Popen(["squeue","-u",user],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
@@ -11,6 +12,10 @@ def user_jobs(user):
 def top_up(count,args):
     with open(args.commands) as f:
         commands=f.read().splitlines()
+        commands=[c.strip() for c in commands if c.strip()]
+        if not commands:
+            sys.exit()
+
 
     to_run=commands[:count]
     for_later=commands[count:]
@@ -40,7 +45,8 @@ if __name__=="__main__":
 
     args = parser.parse_args()
 
-    jobs_existing=user_jobs(args.user)
-    if jobs_existing<args.N[0]: #Can top up
-        top_up(args.N[0]-jobs_existing,args)
-
+    while True:
+        jobs_existing=user_jobs(args.user)
+        if jobs_existing<args.N[0]: #Can top up
+            top_up(args.N[0]-jobs_existing,args)
+        time.sleep(60)
